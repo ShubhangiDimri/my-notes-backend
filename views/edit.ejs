@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="main w-full min-h-screen bg-zinc-900 p-10">
+      <a href="/" class="text-blue-500 inline-block mb-4">Go Back Home</a>
+      <form action="/edit" class="" method="post">
+        <input
+          class="block w-1/4 px-3 py-5 rounded-md bg-zinc-800 text-zinc-500"
+          placeholder="title goes here"
+          value="<%=title %>"
+          name="previous"
+          readonly
+        />
+        <input
+          class="block w-1/4 px-3 py-5 mt-2 rounded-md bg-zinc-800 text-white"
+          placeholder="newname goes here"
+          name="new"
+        />
+        
+        <input
+          type="submit"
+          value="Update Task"
+          class="mt-4 px-5 py-2 cursor-pointer hover:bg-blue-800 active:bg-blue-700 rounded-md bg-blue-600 text-white"
+        />
+      </form>
+    </div>
+  </body>
+</html>

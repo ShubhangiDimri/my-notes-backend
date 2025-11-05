@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Cute Notes </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+    .sparkle {
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+    body {
+      font-family: 'Quicksand', sans-serif;
+    }
+    .title-font {
+      font-family: 'Dancing Script', cursive;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 192, 203, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="main w-full min-h-screen bg-gradient-to-br from-pink-100 via-yellow-50 to-pink-100 flex flex-col items-center">
+    <h1 class="title-font text-6xl text-pink-400 tracking-tight mt-12 mb-2 float">My Notes</h1>
+    <p class="text-pink-300 mb-8 text-lg sparkle"> Remember everything in pastels </p>
+    
+    <div class="form w-full max-w-xl glass rounded-3xl shadow-xl p-8 mb-10">
+      <form action="/create" method="post" class="space-y-4">
+        <input 
+          class="block w-full px-6 py-4 rounded-2xl bg-pink-50/90 border-2 border-pink-200 focus:border-pink-300 focus:ring-2 focus:ring-pink-200 transition-all duration-200 outline-none text-lg text-pink-700 placeholder-pink-300"
+          type="text" 
+          placeholder="✿ Title goes here..." 
+          name="title" 
+          required
+        >
+        <textarea 
+          class="resize-none w-full block px-6 py-4 rounded-2xl bg-pink-50/90 border-2 border-pink-200 focus:border-pink-300 focus:ring-2 focus:ring-pink-200 transition-all duration-200 outline-none text-lg text-pink-700 placeholder-pink-300" 
+          placeholder="❀ Write about it here..." 
+          name="details" 
+          rows="4" 
+          required
+        ></textarea>
+        <button
+          type="submit"
+          class="w-full mt-2 px-6 py-4 cursor-pointer bg-gradient-to-r from-pink-400 to-yellow-400 hover:from-pink-500 hover:to-yellow-500 rounded-2xl text-white font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+        >
+          ✨ Create Note ✨
+        </button>
+      </form>
+    </div>
+
+    <div class="tasks w-full max-w-6xl p-6 flex gap-6 flex-wrap justify-center">
+      <% if(files.length>0){ %>
+        <% files.forEach((val, idx)=>{ %>
+          <div class="task min-w-72 max-w-xs rounded-3xl p-6 glass shadow-lg hover:shadow-xl transition-shadow duration-300 relative <%= val.includes('_pinned_') ? 'border-2 border-yellow-200' : '' %>">
+            <!-- Pin Button -->
+            <form method="POST" action="/toggle-pin" class="absolute -top-3 -right-3">
+              <input type="hidden" name="filename" value="<%=val %>">
+              <button 
+                type="submit"
+                title="<%= val.includes('_pinned_') ? 'Unpin note' : 'Pin note' %>"
+                class="w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-200 <%= val.includes('_pinned_') ? 'bg-yellow-50' : '' %>"
+              >
+                <span class="text-lg"><%= val.includes('_pinned_') ? '📌' : '📍' %></span>
+              </button>
+            </form>
+
+            <h1 class="text-pink-600 text-xl font-bold tracking-tight mb-3 truncate">
+              <%= val.replace('_pinned_', '') %>
+            </h1>
+            <div class="flex justify-between items-center pt-3 border-t border-pink-100">
+              <a href="/files/<%=val %>" class="whitespace-nowrap px-3 py-1.5 text-yellow-500 hover:text-yellow-600 transition-all duration-150 flex items-center gap-1.5 hover:bg-yellow-50 rounded-lg">
+                <span>Read</span>
+                <span class="text-lg">🌸</span>
+              </a>
+              <div class="flex gap-6">
+                <form method="POST" action="/delete" class="inline-block">
+                  <input type="hidden" name="filename" value="<%=val %>">
+                  <button 
+                    type="submit" 
+                    onclick="return confirm('✨ Mark this note as done? ✨')" 
+                    class="px-3 py-1.5 text-green-400 hover:text-green-500 transition-all duration-150 flex items-center gap-1.5 hover:bg-green-50 rounded-lg"
+                  >
+                    <span>Done</span>
+                    <span class="text-lg">✓</span>
+                  </button>
+                </form>
+                <a href="/edit/<%=val %>" class="px-3 py-1.5 text-pink-400 hover:text-pink-500 transition-all duration-150 flex items-center gap-1.5 hover:bg-pink-50 rounded-lg">
+                  <span>Edit</span>
+                  <span class="text-lg">✎</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+          <div class="text-center">
+            <p class="text-pink-300 text-2xl font-light mt-10 animate-pulse">No notes yet...</p>
+            <p class="text-pink-200 text-lg mt-2">✨ Start by adding your first note! ✨</p>
+          </div>
+      <% } %>
+    </div>
+
+    <footer class="mt-auto mb-4 text-pink-300 text-sm">
+      Made with <span class="text-pink-400">♥</span> using <span class="text-yellow-400">✨</span>
+    </footer>
+  </div>
+</body>
+</html>
